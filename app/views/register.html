@@ -1,31 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Secure Shop - Inscription</title>
-    <link rel="stylesheet" href="/css/main.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
     <div id="topbar"></div>
 
     <main>
-        <section class="hero">
-            <div class="container">
-                <h1>Inscription</h1>
+      <section class="hero">
+        <div class="container">
+          <div class="login-card">
+            <h1>Inscription</h1>
+            <p class="hero-text">
+              Heureux de vous rencontrer ! Veuillez enregistrer vos
+              identifiants.
+            </p>
 
-                <p>Placer un formulaire d'inscription ici</p>
+            <form action="/api/auth/register" method="POST">
+              <div class="form-group">
+                <label for="username">Nom d'utilisateur*</label>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  placeholder="paffman03"
+                />
+              </div>
 
+              <div class="form-group">
+                <label for="address">Adresse*</label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  placeholder="Chemin des marroniers 7"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email*</label>
+                <input
+                  type="text"
+                  id="email"
+                  name="email"
+                  placeholder="exemple.ex@exemple.com"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="••••••••"
+                />
+              </div>
+
+              <button type="submit" class="btn-login">S'inscrire</button>
+            </form>
+
+            <div class="login-footer">
+              <p>Déjà un compte ? <a href="/login">Se connecter</a></p>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer id="contact" class="footer">
-        <div class="container">
-            <p>Projet pedagogique - ETML 183</p>
-        </div>
+      <div class="container">
+        <p>Projet pedagogique - ETML 183</p>
+      </div>
     </footer>
 
     <script src="/js/nav.js"></script>
-</body>
+  </body>
 </html>
