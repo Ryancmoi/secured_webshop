@@ -1,6 +1,6 @@
 const db = require("../config/db");
 const bcrypt = require("bcrypt");
-const saltRounds = 10;
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   // ----------------------------------------------------------
@@ -25,19 +25,32 @@ module.exports = {
             .status(401)
             .json({ error: "Email ou mot de passe incorrect" });
         }
-
-        const isPassCorrect = await bcrypt.compare(password, res.password);
+        const user = results[0];
+        const pepper = process.env.PEPPER;
+        const combinedPassword = password + pepper;
+        const isPassCorrect = await bcrypt.compare(
+          combinedPassword,
+          user.password,
+        );
 
         if (isPassCorrect) {
-          // SUCCÈS : Le mot de passe est correct
-          console.log("Connexion réussie pour :", user.username);
-          res.redirect("/");
-        } else {
-          // ÉCHEC : Mauvais mot de passe
-          res.redirect("/login?error=invalid");
-        }
+          console.log("Connecté en tant que", user.username);
 
-        res.redirect("/");
+          const payload = {
+            id: user.id,
+            username: user.user,
+            role: user.role,
+          };
+
+          const token = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: "2h",
+          });
+          res.cookie("token", token, { httpOnly: true, secure: false });
+
+          return res.redirect("/");
+        } else {
+          return res.redirect("/login?error=invalid");
+        }
       });
     } catch (error) {
       res.status(500).send("Erreur lors de la connexion");
@@ -56,8 +69,10 @@ module.exports = {
         .json({ error: "Tout les champs anotés d'un * sont obligatoires" });
     }
     try {
-      const salt = await bcrypt.genSalt(10);
-      const secPassword = await bcrypt.hash(req.body.password, salt);
+      const pepper = process.env.PEPPER;
+      const combinedPassword = password + pepper;
+      const salt = await bcrypt.genSalt(12);
+      const secPassword = await bcrypt.hash(combinedPassword, salt);
 
       const existingUserQuery = `SELECT * FROM users WHERE email = ?`;
 
